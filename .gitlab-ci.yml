@@ -9,7 +9,7 @@ before_script:
  - ln -sf $CI_PROJECT_DIR
  - cd $CI_PROJECT_NAME
 
-test:
+pages:
   stage: deploy
   script:
     - go version
