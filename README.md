@@ -20,6 +20,9 @@ https://www.getpostman.com/collections/0e61ae04d5f54cb17a5a
 1. https://qiita.com/nju33/items/b80d92a4257edeb4b9a1
 
 # Credit
+1. alan.tang@lalamove.com
 1. christopher.chiu@lalamove.com
+1. desmond.ho@lalamove.com
+1. jack.tang@lalamove.com
 1. simon.tse@lalamove.com
 1. wachiu.siu@lalamove.com
