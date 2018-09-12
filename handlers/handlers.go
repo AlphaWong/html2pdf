@@ -12,12 +12,13 @@ import (
 
 func PdfHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
+		log.Println("METHOD_NOT_ALLOW")
 		http.Error(w, "METHOD_NOT_ALLOW", http.StatusMethodNotAllowed)
 		return
 	}
 	r.Body = http.MaxBytesReader(w, r.Body, utils.MaxUploadSize)
-	log.Printf("%v \v", utils.MaxUploadSize)
 	if err := r.ParseMultipartForm(utils.MaxUploadSize); err != nil {
+		log.Println("FILE_TOO_BIG")
 		log.Printf("%v \n", err)
 		http.Error(w, "FILE_TOO_BIG", http.StatusBadRequest)
 		return
@@ -25,6 +26,7 @@ func PdfHandler(w http.ResponseWriter, r *http.Request) {
 
 	file, _, err := r.FormFile("file")
 	if err != nil {
+		log.Println("CANNOT_FOUND_FILE")
 		log.Printf("%v \n", err)
 		http.Error(w, "CANNOT_FOUND_FILE", http.StatusBadRequest)
 		return
@@ -33,6 +35,7 @@ func PdfHandler(w http.ResponseWriter, r *http.Request) {
 
 	fileBytes, err := ioutil.ReadAll(file)
 	if err != nil {
+		log.Println("INVALID_FILE")
 		log.Printf("%v \n", err)
 		http.Error(w, "INVALID_FILE", http.StatusBadRequest)
 		return
@@ -40,6 +43,7 @@ func PdfHandler(w http.ResponseWriter, r *http.Request) {
 
 	filetype := http.DetectContentType(fileBytes)
 	if filetype != "text/html; charset=utf-8" {
+		log.Println("INVALID_FILE_TYPE")
 		log.Printf("%v \n", filetype)
 		http.Error(w, "INVALID_FILE_TYPE", http.StatusBadRequest)
 		return
@@ -50,6 +54,7 @@ func PdfHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("%v \n", tmpFile.Name())
 	defer os.Remove(tmpFile.Name()) // clean up
 	if err != nil {
+		log.Println("CANNOT_CREATE_TMP_FILE")
 		log.Printf("%v \n", err)
 		http.Error(w, "CANNOT_CREATE_TMP_FILE", http.StatusInternalServerError)
 		return
@@ -57,12 +62,14 @@ func PdfHandler(w http.ResponseWriter, r *http.Request) {
 
 	_, err = tmpFile.Write(fileBytes)
 	if err != nil {
+		log.Println("CANNOT_WRITE_TMP_FILE")
 		log.Printf("%v \n", err)
 		http.Error(w, "CANNOT_WRITE_TMP_FILE", http.StatusInternalServerError)
 		return
 	}
 
 	if err := tmpFile.Close(); err != nil {
+		log.Println("CANNOT_CLOSE_TMP_FILE")
 		log.Printf("%v \n", err)
 		http.Error(w, "CANNOT_CLOSE_TMP_FILE", http.StatusInternalServerError)
 	}
@@ -74,6 +81,7 @@ func PdfHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	var c = utils.NewConverter(cp)
 	if err := c.ConvertHtml2Pdf(); err != nil {
+		log.Println("CANNOT_CLOSE_TMP_FILE")
 		log.Printf("%v \n", err)
 		http.Error(w, "CANNOT_CONVERT_PDF", http.StatusInternalServerError)
 		return

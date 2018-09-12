@@ -58,6 +58,7 @@ func TestPdfHandlerSuccess(t *testing.T) {
 	// Check the status code is what we expect.
 	required.Equal(http.StatusOK, rr.Code)
 }
+
 func TestPdfHandlerFailByTooBigFile(t *testing.T) {
 	os.Setenv(utils.MaxSize, "0")
 	boot.Init()
@@ -102,6 +103,7 @@ func TestPdfHandlerFailByTooBigFile(t *testing.T) {
 	// Check the status code is what we expect.
 	required.Equal(http.StatusBadRequest, rr.Code)
 }
+
 func TestPdfHandlerFailByInvalidFileType(t *testing.T) {
 	os.Setenv(utils.MaxSize, "20")
 	boot.Init()
