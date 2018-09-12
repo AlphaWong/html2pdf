@@ -68,6 +68,8 @@ func PdfHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	tmpFile.Sync()
+
 	if err := tmpFile.Close(); err != nil {
 		log.Println("CANNOT_CLOSE_TMP_FILE")
 		log.Printf("%v \n", err)
