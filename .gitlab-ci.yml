@@ -1,0 +1,29 @@
+image: golang:latest
+
+variables:
+  WORK_DIR: /go/src/github.com/AlphaWong/html2pdf
+
+before_script:
+ - mkdir -p $WORK_DIR
+ - cd $WORK_DIR
+ - ln -sf $CI_PROJECT_DIR
+ - cd $CI_PROJECT_NAME
+
+pages:
+  stage: deploy
+  script:
+    - go version
+    - echo $CI_BUILD_REF
+    - echo $CI_PROJECT_DIR
+    - pwd
+    - make coverage
+  artifacts:
+    paths:
+      - public
+
+lint:
+  stage: test
+  allow_failure: true
+  script:
+    - go get -u github.com/mgechev/revive
+    - revive -formatter stylish --exclude=./vendor/... ./...
