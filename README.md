@@ -1,7 +1,22 @@
 # Objective
-Offer a api to convert html to pdf via POST method
+Offer an api to convert html to pdf via POST method
+
+# Run
+```sh
+./reload.sh
+```
 
 # Pre-condition
-1. Install https://github.com/wkhtmltopdf/wkhtmltopdf
-   1. sudo apt-get update && apt-get install wkhtmltopdf -y
-2. docker build . -t pdf-service && docker run --rm -p 8000:8000 pdf-service
+1. wkhtmltopdf for converting binary
+2. Noto-unhinted.zip for i18n issue
+
+# Issue
+1. Noto-unhinted can resolve the cjk and thai character display issue.
+
+# Reference
+1. https://qiita.com/nju33/items/b80d92a4257edeb4b9a1
+
+# Credit
+1. christopher.chiu@lalamove.com
+1. simon.tse@lalamove.com
+1. wachiu.siu@lalamove.com
