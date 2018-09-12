@@ -81,7 +81,7 @@ func PdfHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	var c = utils.NewConverter(cp)
 	if err := c.ConvertHtml2Pdf(); err != nil {
-		log.Println("CANNOT_CLOSE_TMP_FILE")
+		log.Println("CANNOT_CONVERT_PDF")
 		log.Printf("%v \n", err)
 		http.Error(w, "CANNOT_CONVERT_PDF", http.StatusInternalServerError)
 		return
