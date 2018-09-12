@@ -23,6 +23,7 @@ test:
       - public
 
 lint:
+  image: golang:latest
   stage: test
   allow_failure: true
   script:
