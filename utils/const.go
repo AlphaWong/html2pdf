@@ -8,6 +8,8 @@ const (
 	Port       = ":8000"
 	UploadPath = "./tmp/"
 	PdfPath    = "./pdf/"
+
+	MaxSize = "MAX_SIZE"
 )
 
 var (
