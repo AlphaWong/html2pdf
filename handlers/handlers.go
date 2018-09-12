@@ -16,7 +16,7 @@ func PdfHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	r.Body = http.MaxBytesReader(w, r.Body, utils.MaxUploadSize)
-
+	log.Printf("%v \v", utils.MaxUploadSize)
 	if err := r.ParseMultipartForm(utils.MaxUploadSize); err != nil {
 		log.Printf("%v \n", err)
 		http.Error(w, "FILE_TOO_BIG", http.StatusBadRequest)
