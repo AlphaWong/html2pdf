@@ -5,15 +5,14 @@ import (
 )
 
 const (
-	Port       = ":8000"
-	UploadPath = "./tmp/"
-	PdfPath    = "./pdf/"
-
+	Port    = ":8000"
 	MaxSize = "MAX_SIZE"
 )
 
 var (
 	MaxUploadSize int64
+	UploadPath    = "./tmp/"
+	PdfPath       = "./pdf/"
 )
 
 func GetUUID() string {
