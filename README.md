@@ -1,5 +1,5 @@
 # Objective
-Offer an api to convert html to pdf via POST method
+Offer an API to convert html to pdf via POST method
 
 # Run
 ```sh
