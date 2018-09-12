@@ -6,6 +6,9 @@ Offer an api to convert html to pdf via POST method
 ./reload.sh
 ```
 
+# Postman collection
+https://www.getpostman.com/collections/0e61ae04d5f54cb17a5a
+
 # Pre-condition
 1. wkhtmltopdf for converting binary
 2. Noto-unhinted.zip for i18n issue
