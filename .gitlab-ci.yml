@@ -17,7 +17,7 @@ test:
     - echo $CI_PROJECT_DIR
     - pwd
     - sh ./pre-test.sh
-    - make coverage
+    - make coveragehtml
   artifacts:
     paths:
       - public
