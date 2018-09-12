@@ -10,7 +10,7 @@ before_script:
  - cd $CI_PROJECT_NAME
 
 test:
-  stage: test
+  stage: deploy
   script:
     - go version
     - echo $CI_BUILD_REF

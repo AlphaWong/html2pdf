@@ -1,3 +1,6 @@
+[![pipeline status](https://gitlab.com/AlphaWong/html2pdf/badges/master/pipeline.svg)](https://gitlab.com/AlphaWong/html2pdf/pipelines)
+[![coverage report](https://gitlab.com/AlphaWong/html2pdf/badges/master/coverage.svg)](https://alphawong.gitlab.io/html2pdf/coverage.html)
+
 # Objective
 Offer an API to convert html to pdf via POST method
 
