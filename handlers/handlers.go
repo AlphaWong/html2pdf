@@ -68,6 +68,9 @@ func PdfHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Force write to disk
+	// reference : https://www.joeshaw.org/dont-defer-close-on-writable-files/
+	// Credit Alab LAM
 	tmpFile.Sync()
 
 	if err := tmpFile.Close(); err != nil {

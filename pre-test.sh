@@ -6,6 +6,7 @@ echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositorie
 apk add --no-cache wkhtmltopdf curl fontconfig make git alpine-sdk && \
 curl -O https://noto-website.storage.googleapis.com/pkgs/Noto-unhinted.zip && \
 mkdir -p /usr/share/fonts/Noto-unhinted && \
+mkdir public && \
 unzip Noto-unhinted.zip -d /usr/share/fonts/Noto-unhinted/ && \
 rm Noto-unhinted.zip && \
 fc-cache -fv 
