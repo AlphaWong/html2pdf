@@ -1,4 +1,4 @@
-image: golang:latest
+image: golang:alpine
 
 variables:
   WORK_DIR: /go/src/github.com/AlphaWong/html2pdf
@@ -9,13 +9,14 @@ before_script:
  - ln -sf $CI_PROJECT_DIR
  - cd $CI_PROJECT_NAME
 
-pages:
+test:
   stage: deploy
   script:
     - go version
     - echo $CI_BUILD_REF
     - echo $CI_PROJECT_DIR
     - pwd
+    - sh ./pre-test.sh
     - make coverage
   artifacts:
     paths:
