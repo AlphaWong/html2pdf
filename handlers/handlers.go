@@ -92,6 +92,14 @@ func PdfHandler(w http.ResponseWriter, r *http.Request) {
 	if err := tmpFile.Close(); err != nil {
 		logs.Logger().Error(utils.ErrorCannotCloseTmpFile, zap.String(utils.SessionID, fileName), zap.Error(err))
 		http.Error(w, utils.ErrorCannotCloseTmpFile, http.StatusInternalServerError)
+		return
+	}
+
+	o, err := utils.ParseFormValues(r.MultipartForm.Value)
+	if err != nil {
+		logs.Logger().Error(err.Error(), zap.String(utils.SessionID, fileName))
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	// Generate pdf file path
@@ -99,7 +107,7 @@ func PdfHandler(w http.ResponseWriter, r *http.Request) {
 	var cp = &utils.ConverterParam{
 		InFilePath:  tmpFile.Name(),
 		OutFilePath: pdfFileFullPath,
-		Options:     utils.ParseFormValues(r.MultipartForm.Value),
+		Options:     o,
 	}
 
 	// Convert html to pdf

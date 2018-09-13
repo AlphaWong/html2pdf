@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"log"
 	"os/exec"
 	"strings"
@@ -55,11 +56,29 @@ func (h *Html2Pdf) ConvertHtml2Pdf() error {
 	return err
 }
 
-func ParseFormValues(formValues map[string][]string) []string {
+func ParseFormValues(formValues map[string][]string) ([]string, error) {
 	// The orderfing of the formValues is not always the same
+	// User disallow input same name of the key
+	//
+	// For example
+	// curl -X POST \
+	// https://httpbin.org/post \
+	// -H 'Cache-Control: no-cache' \
+	// -H 'Postman-Token: d820d5d1-aa58-4d9c-9f43-f5636e67dcbe' \
+	// -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' \
+	// -F 'a=1,2,3' \
+	// -F 'b=4,5,6' \
+	// -F a=4
+	// key `a` has been insert two times.
+	//
+	// However, Go do not allow it in `CreateFormField`
+	// Reference: https://github.com/golang/go/blob/master/src/mime/multipart/writer.go#L145
 	var ss = []string{}
 	for k, v := range formValues {
-		ss = append(ss, k, strings.Join(v, ","))
+		if len(v) > 1 {
+			return []string{}, fmt.Errorf("key %s has been inputed more than one times", k)
+		}
+		ss = append(ss, k, v[0])
 	}
-	return ss
+	return ss, nil
 }
