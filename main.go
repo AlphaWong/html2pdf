@@ -7,6 +7,8 @@ import (
 	"github.com/AlphaWong/html2pdf/boot"
 	"github.com/AlphaWong/html2pdf/handlers"
 	"github.com/AlphaWong/html2pdf/utils"
+	"github.com/lalamove-go/logs"
+	"go.uber.org/zap"
 )
 
 func main() {
@@ -14,6 +16,6 @@ func main() {
 
 	http.HandleFunc("/convert", handlers.PdfHandler)
 
-	log.Println("Server on at", utils.Port)
+	logs.Logger().Info("Server on at", zap.String("PORT", utils.Port))
 	log.Fatal(http.ListenAndServe(utils.Port, nil))
 }

@@ -7,64 +7,76 @@ import (
 	"net/http"
 	"os"
 
+	"go.uber.org/zap"
+
 	"github.com/AlphaWong/html2pdf/utils"
+	"github.com/lalamove-go/logs"
 )
 
 func PdfHandler(w http.ResponseWriter, r *http.Request) {
+	// Generate UUID v4 for the file
+	// It is the session id also
+	var fileName = utils.GetUUID()
+
+	// Add session id to header
+	w.Header().Set("Session-Id", fileName)
+
 	if r.Method != http.MethodPost {
-		log.Println("METHOD_NOT_ALLOW")
-		http.Error(w, "METHOD_NOT_ALLOW", http.StatusMethodNotAllowed)
-		return
-	}
-	r.Body = http.MaxBytesReader(w, r.Body, utils.MaxUploadSize)
-	if err := r.ParseMultipartForm(utils.MaxUploadSize); err != nil {
-		log.Println("FILE_TOO_BIG")
-		log.Printf("%v \n", err)
-		http.Error(w, "FILE_TOO_BIG", http.StatusBadRequest)
+		logs.Logger().Error(utils.ErrorMethodNotAllow, zap.String(utils.SessionID, fileName))
+		http.Error(w, utils.ErrorMethodNotAllow, http.StatusMethodNotAllowed)
 		return
 	}
 
+	// Check file size
+	r.Body = http.MaxBytesReader(w, r.Body, utils.MaxUploadSize)
+	if err := r.ParseMultipartForm(utils.MaxUploadSize); err != nil {
+		logs.Logger().Error(utils.ErrorFileTooBig, zap.String(utils.SessionID, fileName), zap.Error(err))
+		http.Error(w, utils.ErrorFileTooBig, http.StatusBadRequest)
+		return
+	}
+
+	// Check file existence
 	file, _, err := r.FormFile("file")
 	if err != nil {
-		log.Println("CANNOT_FOUND_FILE")
-		log.Printf("%v \n", err)
-		http.Error(w, "CANNOT_FOUND_FILE", http.StatusBadRequest)
+		logs.Logger().Error(utils.ErrorFileNotFound, zap.String(utils.SessionID, fileName), zap.Error(err))
+		http.Error(w, utils.ErrorFileNotFound, http.StatusBadRequest)
 		return
 	}
 	defer file.Close()
 
+	// Read file to byte
 	fileBytes, err := ioutil.ReadAll(file)
 	if err != nil {
-		log.Println("INVALID_FILE")
-		log.Printf("%v \n", err)
-		http.Error(w, "INVALID_FILE", http.StatusBadRequest)
+		logs.Logger().Error(utils.ErrorInvalidFile, zap.String(utils.SessionID, fileName), zap.Error(err))
+		http.Error(w, utils.ErrorInvalidFile, http.StatusBadRequest)
 		return
 	}
 
+	// Check file type
 	filetype := http.DetectContentType(fileBytes)
 	if filetype != "text/html; charset=utf-8" {
-		log.Println("INVALID_FILE_TYPE")
-		log.Printf("%v \n", filetype)
-		http.Error(w, "INVALID_FILE_TYPE", http.StatusBadRequest)
+		logs.Logger().Error(utils.ErrorInvalidFileType, zap.String(utils.SessionID, fileName), zap.Error(err))
+		http.Error(w, utils.ErrorInvalidFileType, http.StatusBadRequest)
 		return
 	}
 
-	var fileName = utils.GetUUID()
+	// Create tmp file
 	tmpFile, err := ioutil.TempFile(utils.UploadPath, fileName+"*.html")
 	log.Printf("%v \n", tmpFile.Name())
-	defer os.Remove(tmpFile.Name()) // clean up
 	if err != nil {
-		log.Println("CANNOT_CREATE_TMP_FILE")
-		log.Printf("%v \n", err)
-		http.Error(w, "CANNOT_CREATE_TMP_FILE", http.StatusInternalServerError)
+		logs.Logger().Error(utils.ErrorCannotCreateTmpFile, zap.String(utils.SessionID, fileName), zap.Error(err))
+		http.Error(w, utils.ErrorCannotCreateTmpFile, http.StatusInternalServerError)
 		return
 	}
 
+	// Clean up tmp file
+	defer os.Remove(tmpFile.Name())
+
+	// Write byte to tmp file
 	_, err = tmpFile.Write(fileBytes)
 	if err != nil {
-		log.Println("CANNOT_WRITE_TMP_FILE")
-		log.Printf("%v \n", err)
-		http.Error(w, "CANNOT_WRITE_TMP_FILE", http.StatusInternalServerError)
+		logs.Logger().Error(utils.ErrorCannotWriteTmpFile, zap.String(utils.SessionID, fileName), zap.Error(err))
+		http.Error(w, utils.ErrorCannotWriteTmpFile, http.StatusInternalServerError)
 		return
 	}
 
@@ -73,34 +85,38 @@ func PdfHandler(w http.ResponseWriter, r *http.Request) {
 	// Credit Alan TANG
 	tmpFile.Sync()
 
+	// Close the tmp file after writing
 	if err := tmpFile.Close(); err != nil {
-		log.Println("CANNOT_CLOSE_TMP_FILE")
-		log.Printf("%v \n", err)
-		http.Error(w, "CANNOT_CLOSE_TMP_FILE", http.StatusInternalServerError)
+		logs.Logger().Error(utils.ErrorCannotCloseTmpFile, zap.String(utils.SessionID, fileName), zap.Error(err))
+		http.Error(w, utils.ErrorCannotCloseTmpFile, http.StatusInternalServerError)
 	}
 
+	// Generate pdf file path
 	var pdfFileFullPath = utils.PdfPath + fileName + ".pdf"
 	var cp = &utils.ConverterParam{
 		InFilePath:  tmpFile.Name(),
 		OutFilePath: pdfFileFullPath,
 	}
+
+	// Convert html to pdf
 	var c = utils.NewConverter(cp)
 	if err := c.ConvertHtml2Pdf(); err != nil {
-		log.Println("CANNOT_CONVERT_PDF")
-		log.Printf("%v \n", err)
-		http.Error(w, "CANNOT_CONVERT_PDF", http.StatusInternalServerError)
+		logs.Logger().Error(utils.ErrorCannotConvertPDF, zap.String(utils.SessionID, fileName), zap.Error(err))
+		http.Error(w, utils.ErrorCannotConvertPDF, http.StatusInternalServerError)
 		return
 	}
 
-	// create header
+	// Create header
 	w.Header().Add("Accept-Charset", "utf-8")
 	w.Header().Add("Content-Type", "application/pdf")
 	w.Header().Set("Content-Encoding", "gzip")
-	w.Header().Set("Session-Id", fileName)
 
-	b, err := ioutil.ReadFile(pdfFileFullPath)
+	// Convert pdf file in gzip format
+	b, _ := ioutil.ReadFile(pdfFileFullPath)
 	gz := gzip.NewWriter(w)
 	gz.Write(b)
 	defer gz.Close()
+
+	// Clear up pdf file
 	os.Remove(pdfFileFullPath)
 }
