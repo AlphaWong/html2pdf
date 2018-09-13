@@ -16,16 +16,8 @@ pages:
     - echo $CI_BUILD_REF
     - echo $CI_PROJECT_DIR
     - pwd
-    - go get -u github.com/golang/dep/cmd/dep golang.org/x/tools/cmd/godoc
-    - dep init -v
-    - go test -short ./... -covermode=count -coverprofile=coverage.out
-    - mkdir public
-    - go fmt ./...
-    - go tool cover -func=coverage.out
-    - go tool cover -html=coverage.out -o public/coverage.html
-    - curl -s https://codecov.io/bash > ci.sh
-    - chmod 777 ./ci.sh
-    - ./ci.sh -t $CODECOV_TOKEN
+    - sh ./pre-test.sh
+    - make coveragehtml
   artifacts:
     paths:
       - public
