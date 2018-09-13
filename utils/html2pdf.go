@@ -57,11 +57,9 @@ func (h *Html2Pdf) ConvertHtml2Pdf() error {
 
 func ParseFormValues(formValues map[string][]string) []string {
 	// The orderfing of the formValues is not always the same
-	var ss = make([]string, len(formValues))
-	var i = 0
+	var ss = []string{}
 	for k, v := range formValues {
-		ss[i] = k + " " + strings.Join(v, ",")
-		i++
+		ss = append(ss, k, strings.Join(v, ","))
 	}
 	return ss
 }

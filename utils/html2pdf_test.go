@@ -13,6 +13,8 @@ func TestParseFormValues(t *testing.T) {
 		"b": []string{"4", "5", "6"},
 	}
 	var r = ParseFormValues(formValues)
-	required.Contains(r, "a 1,2,3")
-	required.Contains(r, "b 4,5,6")
+	required.Contains(r, "a")
+	required.Contains(r, "1,2,3")
+	required.Contains(r, "b")
+	required.Contains(r, "4,5,6")
 }
