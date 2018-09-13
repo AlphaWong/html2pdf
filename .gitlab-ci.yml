@@ -1,4 +1,4 @@
-image: golang:latest
+image: golang:alpine
 
 variables:
   WORK_DIR: /go/src/github.com/AlphaWong
