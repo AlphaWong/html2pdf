@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"log"
 	"os/exec"
 	"strings"
 )
@@ -12,11 +13,13 @@ type Converter interface {
 type Html2Pdf struct {
 	InFilePath  string
 	OutFilePath string
+	Options     []string
 }
 
 type ConverterParam struct {
 	InFilePath  string
 	OutFilePath string
+	Options     []string
 }
 
 var _ Converter = (*Html2Pdf)(nil)
@@ -27,11 +30,16 @@ func NewConverter(c *ConverterParam) Converter {
 	return &Html2Pdf{
 		InFilePath:  c.InFilePath,
 		OutFilePath: c.OutFilePath,
+		Options:     c.Options,
 	}
 }
 
 func (h *Html2Pdf) ConvertHtml2Pdf() error {
-	var cmd = exec.Command(wkhtmltopdf, h.InFilePath, h.OutFilePath)
+	// Create a cmd with options
+	var cmd = exec.Command(wkhtmltopdf, h.Options...)
+	// append the input path and output path
+	cmd.Args = append(cmd.Args, h.InFilePath, h.OutFilePath)
+	log.Println(cmd.Args)
 	var out strings.Builder
 	cmd.Stderr = &out
 	err := cmd.Run()
@@ -45,4 +53,15 @@ func (h *Html2Pdf) ConvertHtml2Pdf() error {
 		}
 	}
 	return err
+}
+
+func ParseFormValues(formValues map[string][]string) []string {
+	// The orderfing of the formValues is not always the same
+	var ss = make([]string, len(formValues))
+	var i = 0
+	for k, v := range formValues {
+		ss[i] = k + " " + strings.Join(v, ",")
+		i++
+	}
+	return ss
 }

@@ -44,6 +44,9 @@ func PdfHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
+	// Log form values
+	logs.Logger().Info("form data", zap.String(utils.SessionID, fileName), zap.Any("value", r.MultipartForm.Value))
+
 	// Read file to byte
 	fileBytes, err := ioutil.ReadAll(file)
 	if err != nil {
@@ -96,6 +99,7 @@ func PdfHandler(w http.ResponseWriter, r *http.Request) {
 	var cp = &utils.ConverterParam{
 		InFilePath:  tmpFile.Name(),
 		OutFilePath: pdfFileFullPath,
+		Options:     utils.ParseFormValues(r.MultipartForm.Value),
 	}
 
 	// Convert html to pdf
