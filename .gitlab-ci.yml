@@ -22,6 +22,7 @@ pages:
     - echo $CI_BUILD_REF
     - echo $CI_PROJECT_DIR
     - pwd
+    - mkdir public
     - sh ./build.sh
     - make coveragehtml
   artifacts:
