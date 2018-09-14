@@ -8,5 +8,5 @@ dpkg -i /tmp/temp/wkhtmltox_0.12.5-1.stretch_amd64.deb > /dev/null
 apt -qq install -f -y
 dpkg -i /tmp/temp/wkhtmltox_0.12.5-1.stretch_amd64.deb > /dev/null
 mkdir -p /usr/share/fonts/Noto-unhinted
-unzip /tmp/temp/Noto-unhinted.zip -d /usr/share/fonts/Noto-unhinted/
+unzip -qq /tmp/temp/Noto-unhinted.zip -d /usr/share/fonts/Noto-unhinted/
 fc-cache -fv
