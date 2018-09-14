@@ -7,6 +7,11 @@ Offer an API to convert html to pdf via POST method
 # How
 It wraps `wkhtmltopdf` for the html convert to pdf. The reason we do not use `weasyprint` is that weasyprint do not offer a suitable converted product. However, `wkhtmltopdf` always return a suitable result. Also, `chrome headless mode` do not have the feature we need such as footer and header.
 
+# Run via docker
+```sh
+docker run -it --rm -p 8000:80 registry.gitlab.com/alphawong/html2pdf
+```
+
 # Run
 ```sh
 ./reload.sh
