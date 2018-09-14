@@ -30,6 +30,7 @@ pages:
       - public
 
 build:
+  image: docker:stable
   stage: build
   script:
     - version=$(cat version)
