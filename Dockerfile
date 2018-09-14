@@ -23,5 +23,5 @@ COPY ./build.sh .
 RUN mkdir /pdf
 RUN sh ./build.sh
 RUN wkhtmltopdf --version
-EXPOSE 8000
+EXPOSE 80
 CMD ["/app"]
