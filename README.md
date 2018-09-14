@@ -29,7 +29,8 @@ curl -X POST \
   -H 'Content-Type: application/x-www-form-urlencoded' \
   -H 'Postman-Token: 18fad9e8-402b-435c-bd9a-173f3e200cc0' \
   -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' \
-  -F file=@/home/alpha/Downloads/people.html
+  -F file=@/home/alpha/Downloads/people.html \
+  -F '--footer-left=[page]'
 ```
 
 # Pre-condition
