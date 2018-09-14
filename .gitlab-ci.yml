@@ -8,6 +8,9 @@ stages:
 variables:
   WORK_DIR: /go/src/github.com/AlphaWong
 
+services:
+  - docker:dind
+
 before_script:
  - mkdir -p $WORK_DIR
  - cd $WORK_DIR
@@ -22,6 +25,7 @@ pages:
     - echo $CI_BUILD_REF
     - echo $CI_PROJECT_DIR
     - pwd
+    - mkdir public
     - sh ./build.sh
     - make coveragehtml
   artifacts:
@@ -29,6 +33,7 @@ pages:
       - public
 
 build:
+  image: docker:stable
   stage: build
   script:
     - version=$(cat version)
