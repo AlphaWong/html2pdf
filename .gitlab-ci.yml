@@ -8,6 +8,9 @@ stages:
 variables:
   WORK_DIR: /go/src/github.com/AlphaWong
 
+services:
+  - docker:dind
+
 before_script:
  - mkdir -p $WORK_DIR
  - cd $WORK_DIR
