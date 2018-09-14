@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	Port      = ":8000"
+	Port      = ":80"
 	MaxSize   = "MAX_SIZE"
 	SessionID = "SessionID"
 )
