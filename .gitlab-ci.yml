@@ -1,4 +1,9 @@
-image: golang:alpine
+image: debian:latest
+
+stages:
+  - lint
+  - test
+  - build
 
 variables:
   WORK_DIR: /go/src/github.com/AlphaWong
@@ -10,21 +15,32 @@ before_script:
  - cd $CI_PROJECT_NAME
 
 pages:
-  stage: deploy
+  image: golang:latest
+  stage: test
   script:
     - go version
     - echo $CI_BUILD_REF
     - echo $CI_PROJECT_DIR
     - pwd
-    - sh ./pre-test.sh
+    - sh ./build.sh
     - make coveragehtml
   artifacts:
     paths:
       - public
 
+build:
+  stage: build
+  script:
+    - version=$(cat version)
+    - docker login -u $ACCOUNT -p $PASSWORD registry.gitlab.com
+    - docker build -t registry.gitlab.com/alphawong/html2pdf .
+    - docker tag registry.gitlab.com/alphawong/html2pdf registry.gitlab.com/alphawong/html2pdf:$version
+    - docker push registry.gitlab.com/alphawong/html2pdf:$version
+    - docker push registry.gitlab.com/alphawong/html2pdf
+
 lint:
   image: golang:latest
-  stage: test
+  stage: lint
   allow_failure: true
   script:
     - go get -u github.com/mgechev/revive
