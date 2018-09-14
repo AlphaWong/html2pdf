@@ -16,18 +16,19 @@ RUN CGO_ENABLE=0 GOOS=linux \
   -o app \
   && mv ./app /go/bin/app
 
-FROM alpine:latest
+FROM debian:latest
 ENV MAX_SIZE=20
 COPY --from=build /go/bin/app /
 RUN mkdir /pdf
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
-    echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
-    echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
-    apk add --no-cache wkhtmltopdf font-noto curl fontconfig && \
-    curl -O https://noto-website.storage.googleapis.com/pkgs/Noto-unhinted.zip && \
-    mkdir -p /usr/share/fonts/Noto-unhinted && \
-    unzip Noto-unhinted.zip -d /usr/share/fonts/Noto-unhinted/ && \
-    rm Noto-unhinted.zip && \
-    fc-cache -fv 
+RUN apt-get update && apt-get install wget build-essential unzip -y && \
+  wget -P /tmp/temp/ https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb && \
+  wget -P /tmp/temp/ https://noto-website.storage.googleapis.com/pkgs/Noto-unhinted.zip && \
+  dpkg -i /tmp/temp/wkhtmltox_0.12.5-1.stretch_amd64.deb || true && \
+  apt install -f -y && \
+  dpkg -i /tmp/temp/wkhtmltox_0.12.5-1.stretch_amd64.deb && \
+  mkdir -p /usr/share/fonts/Noto-unhinted && \
+  unzip /tmp/temp/Noto-unhinted.zip -d /usr/share/fonts/Noto-unhinted/ && \
+  fc-cache -fv
+RUN wkhtmltopdf --version
 EXPOSE 8000
 CMD ["/app"]

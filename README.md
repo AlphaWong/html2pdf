@@ -21,16 +21,19 @@ It wraps `wkhtmltopdf` for the html convert to pdf. The reason we do not use `we
 # Postman collection
 https://www.getpostman.com/collections/0e61ae04d5f54cb17a5a
 
-# Curl
+# Postman
+![alt](https://i.imgur.com/7LXtzEr.png)
+
+# cURL
 ```
 curl -X POST \
   http://127.0.0.1:8000/convert \
   -H 'Cache-Control: no-cache' \
   -H 'Content-Type: application/x-www-form-urlencoded' \
-  -H 'Postman-Token: 18fad9e8-402b-435c-bd9a-173f3e200cc0' \
+  -H 'Postman-Token: 455468a3-a8cb-4e88-a9bb-b3e9b61b505d' \
   -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' \
-  -F file=@/home/alpha/Downloads/people.html \
-  -F '--footer-left=[page]'
+  -F file=@/home/alpha/works/src/github.com/AlphaWong/html2pdf/simple/http2.html \
+  -F '--footer-left="[page] lalamove"'
 ```
 
 # Pre-condition

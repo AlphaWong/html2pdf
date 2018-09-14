@@ -18,7 +18,7 @@ func TestPdfHandlerSuccess(t *testing.T) {
 	os.Setenv(utils.MaxSize, "20")
 	boot.Init()
 	var required = require.New(t)
-	var filename = "../simple/people.html"
+	var filename = "../simple/http2.html"
 	utils.UploadPath = "../tmp/"
 	utils.PdfPath = "../pdf/"
 
@@ -63,7 +63,7 @@ func TestPdfHandlerFailBySameNameOptionValues(t *testing.T) {
 	os.Setenv(utils.MaxSize, "20")
 	boot.Init()
 	var required = require.New(t)
-	var filename = "../simple/people.html"
+	var filename = "../simple/http2.html"
 	utils.UploadPath = "../tmp/"
 	utils.PdfPath = "../pdf/"
 
@@ -115,7 +115,7 @@ func TestPdfHandlerSuccessByOptionValues(t *testing.T) {
 	os.Setenv(utils.MaxSize, "20")
 	boot.Init()
 	var required = require.New(t)
-	var filename = "../simple/people.html"
+	var filename = "../simple/http2.html"
 	utils.UploadPath = "../tmp/"
 	utils.PdfPath = "../pdf/"
 
@@ -166,7 +166,7 @@ func TestPdfHandlerFailByTooBigFile(t *testing.T) {
 	os.Setenv(utils.MaxSize, "0")
 	boot.Init()
 	var required = require.New(t)
-	var filename = "../simple/people.html"
+	var filename = "../simple/http2.html"
 	utils.UploadPath = "../tmp/"
 	utils.PdfPath = "../pdf/"
 
@@ -256,7 +256,7 @@ func TestPdfHandlerFailByInvalidFormName(t *testing.T) {
 	os.Setenv(utils.MaxSize, "20")
 	boot.Init()
 	var required = require.New(t)
-	var filename = "../simple/people.html"
+	var filename = "../simple/http2.html"
 	utils.UploadPath = "../tmp/"
 	utils.PdfPath = "../pdf/"
 
@@ -301,7 +301,7 @@ func TestPdfHandlerFailByPutMethod(t *testing.T) {
 	os.Setenv(utils.MaxSize, "20")
 	boot.Init()
 	var required = require.New(t)
-	var filename = "../simple/people.html"
+	var filename = "../simple/http2.html"
 	utils.UploadPath = "../tmp/"
 	utils.PdfPath = "../pdf/"
 
