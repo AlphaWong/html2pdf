@@ -16,7 +16,7 @@ RUN CGO_ENABLE=0 GOOS=linux \
   -o app \
   && mv ./app /go/bin/app
 
-FROM debian:latest
+FROM gcr.io/google-appengine/debian9:latest
 ENV MAX_SIZE=20
 COPY --from=build /go/bin/app /
 COPY ./build.sh .
