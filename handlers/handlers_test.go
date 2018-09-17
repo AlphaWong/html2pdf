@@ -14,6 +14,30 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestHealthCheckHandler(t *testing.T) {
+	os.Setenv(utils.MaxSize, "20")
+	boot.Init()
+	var required = require.New(t)
+	utils.UploadPath = "../tmp/"
+	utils.PdfPath = "../pdf/"
+
+	req, err := http.NewRequest(http.MethodGet, "/health", nil)
+	if err != nil {
+		required.NoError(err)
+	}
+
+	// We create a ResponseRecorder (which satisfies http.ResponseWriter) to record the response.
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(HealthCheckHandler)
+
+	// Our handlers satisfy http.Handler, so we can call their ServeHTTP method
+	// directly and pass in our Request and ResponseRecorder.
+	handler.ServeHTTP(rr, req)
+
+	// Check the status code is what we expect.
+	required.Equal(http.StatusOK, rr.Code)
+}
+
 func TestPdfHandlerSuccess(t *testing.T) {
 	os.Setenv(utils.MaxSize, "20")
 	boot.Init()

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"compress/gzip"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -12,6 +13,18 @@ import (
 	"github.com/AlphaWong/html2pdf/utils"
 	"github.com/lalamove-go/logs"
 )
+
+func HealthCheckHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, utils.ErrorMethodNotAllow, http.StatusMethodNotAllowed)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
+	w.WriteHeader(http.StatusOK)
+	io.WriteString(w, "OK")
+}
 
 func PdfHandler(w http.ResponseWriter, r *http.Request) {
 	// Generate UUID v4 for the file

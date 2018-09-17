@@ -14,6 +14,7 @@ import (
 func main() {
 	boot.Init()
 
+	http.HandleFunc("/health", handlers.HealthCheckHandler)
 	http.HandleFunc("/convert", handlers.PdfHandler)
 
 	logs.Logger().Info("Server on at", zap.String("PORT", utils.Port))
