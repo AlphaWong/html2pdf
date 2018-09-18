@@ -18,6 +18,8 @@ RUN CGO_ENABLE=0 GOOS=linux \
 
 FROM gcr.io/google-appengine/debian9:latest
 ENV MAX_SIZE=20
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 COPY --from=build /go/bin/app /
 COPY ./build.sh .
 RUN mkdir /pdf
