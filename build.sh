@@ -1,7 +1,7 @@
 #!/bin/sh 
 
 apt-get -qq update
-apt-get -qq install wget build-essential unzip
+apt-get -qq install wget build-essential unzip locales-all
 wget -q -P /tmp/temp/ https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb
 wget -q -P /tmp/temp/ https://noto-website.storage.googleapis.com/pkgs/Noto-unhinted.zip
 dpkg -i /tmp/temp/wkhtmltox_0.12.5-1.stretch_amd64.deb > /dev/null
