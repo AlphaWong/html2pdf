@@ -60,11 +60,12 @@ func PdfHandler(w http.ResponseWriter, r *http.Request) {
 	// Log form values
 	logs.Logger().Info("form data", zap.String(utils.SessionID, fileName), zap.Any("value", r.MultipartForm.Value))
 
-	// Read file to byte
-	fileBytes, err := ioutil.ReadAll(file)
+	// Only the first 512 bytes are used to sniff the content type.
+	var fileBytes = make([]byte, 512)
+	_, err = file.Read(fileBytes)
 	if err != nil {
-		logs.Logger().Error(utils.ErrorInvalidFile, zap.String(utils.SessionID, fileName), zap.Error(err))
-		http.Error(w, utils.ErrorInvalidFile, http.StatusBadRequest)
+		logs.Logger().Error(utils.ErrorCannotReadFile, zap.String(utils.SessionID, fileName), zap.Error(err))
+		http.Error(w, utils.ErrorCannotReadFile, http.StatusBadRequest)
 		return
 	}
 
@@ -95,6 +96,9 @@ func PdfHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, utils.ErrorCannotWriteTmpFile, http.StatusInternalServerError)
 		return
 	}
+
+	// Credit wachiu.siu
+	io.Copy(tmpFile, file)
 
 	// Force write to disk
 	// reference : https://www.joeshaw.org/dont-defer-close-on-writable-files/
