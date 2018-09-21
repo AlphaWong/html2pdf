@@ -1,4 +1,4 @@
-FROM golang:latest as build
+FROM golang:1.11.0 as build
 
 ENV GO111MODULE=on
 ENV MAX_SIZE=20
@@ -24,7 +24,7 @@ RUN upx --ultra-brute -qq app && \
   upx -t app && \
   mv ./app /go/bin/app
 
-FROM gcr.io/google-appengine/debian9:latest
+FROM gcr.io/google-appengine/debian9:2018-08-09-115606
 ENV MAX_SIZE=20
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
